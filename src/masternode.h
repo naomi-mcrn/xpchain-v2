@@ -220,6 +220,11 @@ public:
         return nTimeToCheckAt - lastPing.sigTime < nSeconds;
     }
 
+    //////////////////////////////////////////////////////
+    CAmount CheckOutPointValue(const COutPoint& outpoint);
+    int RetrieveMNType();
+    //////////////////////////////////////////////////////
+
     bool IsEnabled() const;
     bool IsPreEnabled() const { return nActiveState == MASTERNODE_PRE_ENABLED; }
     bool IsPoSeBanned() const { return nActiveState == MASTERNODE_POSE_BAN; }

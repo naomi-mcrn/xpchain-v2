@@ -520,20 +520,14 @@ bool CMasternodeMan::Has(const COutPoint& outpoint)
 //
 // Deterministically select the oldest/best masternode to pay on the network
 //
-bool CMasternodeMan::GetNextMasternodeInQueueForPayment(bool fFilterSigTime, int& nCountRet, masternode_info_t& mnInfoRet) const
-{
-    return GetNextMasternodeInQueueForPayment(nCachedBlockHeight, fFilterSigTime, nCountRet, mnInfoRet);
-}
-
-bool CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight, bool fFilterSigTime, int& nCountRet, masternode_info_t& mnInfoRet) const
+bool CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight, bool fFilterSigTime, int& nCountRet, masternode_info_t& mnInfoRet, int mnType)
 {
     mnInfoRet = masternode_info_t();
     nCountRet = 0;
 
-    if (!masternodeSync.IsWinnersListSynced()) {
-        // without winner list we can't reliably find the next winner anyway
+    if (!masternodeSync.IsWinnersListSynced() ||
+        mnType == Params().CollateralLevels())
         return false;
-    }
 
     // Need LOCK2 here to ensure consistent locking order because the GetBlockHash call below locks cs_main
     LOCK2(cs_main,cs);
@@ -568,7 +562,7 @@ bool CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight, bool f
 
     //when the network is in the process of upgrading, don't penalize nodes that recently restarted
     if(fFilterSigTime && nCountRet < nMnCount/3)
-        return GetNextMasternodeInQueueForPayment(nBlockHeight, false, nCountRet, mnInfoRet);
+        return GetNextMasternodeInQueueForPayment(nBlockHeight, false, nCountRet, mnInfoRet, mnType);
 
     // Sort them low to high
     sort(vecMasternodeLastPaid.begin(), vecMasternodeLastPaid.end(), CompareLastPaidBlock());

@@ -70,7 +70,7 @@ int64_t KernelRecord::getPoSReward(int minutes)
 {
     int64_t PoSReward;
     int64_t nWeight = GetAdjustedTime() - nTime + minutes * 60;
-    PoSReward = GetProofOfStakeReward(nWeight);
+    PoSReward = GetProofOfStakeReward();
     return PoSReward;
 }
 

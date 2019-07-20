@@ -166,7 +166,7 @@ public:
     bool GetMasternodeInfo(const CScript& payee, masternode_info_t& mnInfoRet);
 
     /// Find an entry in the masternode list that is next to be paid
-    bool GetNextMasternodeInQueueForPayment(int nBlockHeight, bool fFilterSigTime, int& nCountRet, masternode_info_t& mnInfoRet) const;
+    bool GetNextMasternodeInQueueForPayment(int nBlockHeight, bool fFilterSigTime, int& nCountRet, masternode_info_t& mnInfoRet, int mnType);
     /// Same as above but use current block height
     bool GetNextMasternodeInQueueForPayment(bool fFilterSigTime, int& nCountRet, masternode_info_t& mnInfoRet) const;
 

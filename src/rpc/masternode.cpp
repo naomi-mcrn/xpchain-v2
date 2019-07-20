@@ -377,7 +377,7 @@ static UniValue masternode(const JSONRPCRequest& request)
 
         int nCount;
         masternode_info_t mnInfo;
-        mnodeman.GetNextMasternodeInQueueForPayment(true, nCount, mnInfo);
+        //mnodeman.GetNextMasternodeInQueueForPayment(true, nCount, mnInfo);
 
         if (strMode == "qualify")
             return nCount;
@@ -401,7 +401,7 @@ static UniValue masternode(const JSONRPCRequest& request)
         nHeight = pindex->nHeight + (strCommand == "current" ? 1 : 10);
         mnodeman.UpdateLastPaid(pindex);
 
-        if(!mnodeman.GetNextMasternodeInQueueForPayment(nHeight, true, nCount, mnInfo))
+        if(!mnodeman.GetNextMasternodeInQueueForPayment(nHeight, true, nCount, mnInfo, 0))
             return "unknown";
 
         UniValue obj(UniValue::VOBJ);

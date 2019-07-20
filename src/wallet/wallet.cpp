@@ -3333,12 +3333,11 @@ void CWallet::FillCoinStakePayments(CMutableTransaction &transaction,
     const CWalletTx *walletTx = GetWalletTx(stakePrevout.hash);
     CTxOut prevTxOut = walletTx->tx->vout[stakePrevout.n];
     auto nCredit = prevTxOut.nValue;
-    unsigned int percentage = 100;
 
-    auto nCoinStakeReward = nCredit + GetStakeReward(blockReward, percentage);
+    CAmount nReward = GetProofOfStakeReward();
+
+    auto nCoinStakeReward = nCredit + nReward;
     transaction.vin.emplace_back(CTxIn(stakePrevout));
-    //presstab HyperStake - calculate the total size of our new output including the stake reward so that we can use it to decide whether to split the stake outputs
-    // adding output which will pay to coin stake
     transaction.vout.emplace_back(nCoinStakeReward, scriptPubKeyOut);
     {
         CTxOut &lastTx = transaction.vout.back();

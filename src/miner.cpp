@@ -202,44 +202,9 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CWallet *wallet, 
     }
     else
     {
-
         if (nHeight <= Params().GetConsensus().nFirstPoSBlock) {
-
-		coinbaseTx.vout[0].nValue = nFees + blockReward;
-
-        } else {
-
-		// masternode payment
-
-		bool hasPayment = true;
-		CScript payee;
-
-		if (!mnpayments.GetBlockPayee(nHeight, payee)) {
-			int nCount = 0;
-			masternode_info_t mnInfo;
-			if(!mnodeman.GetNextMasternodeInQueueForPayment(pindexPrev->nHeight + 1, true, nCount, mnInfo)) {
-				payee = GetScriptForDestination(mnInfo.pubKeyCollateralAddress.GetID());
-			} else {
-				LogPrint(BCLog::MNPAYMENTS, "CreateNewBlock: Failed to detect masternode to pay\n");
-				hasPayment = false;
-			}
-		}
-
-		CAmount masternodePayment = GetMasternodePayment(nHeight, blockReward);
-
-		if (hasPayment) {
-			coinbaseTx.vout.resize(2);
-			coinbaseTx.vout[1].scriptPubKey = payee;
-			coinbaseTx.vout[1].nValue = masternodePayment;
-			coinbaseTx.vout[0].nValue = blockReward - masternodePayment;
-		}
-
-		CTxDestination address1;
-		ExtractDestination(payee, address1);
-		CBitcoinAddress address2(address1);
-		LogPrintf("CreateNewBlock::FillBlockPayee -- Masternode payment %lld to %s\n",
-			  masternodePayment, EncodeDestination(address1));
-         }
+            coinbaseTx.vout[0].nValue = nFees + blockReward;
+        }
     }
 
     int nPackagesSelected = 0;
@@ -265,9 +230,9 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CWallet *wallet, 
     pblocktemplate->vTxSigOpsCost[0] = WITNESS_SCALE_FACTOR * GetLegacySigOpCount(*pblock->vtx[0]);
 
     CValidationState state;
-    //    if (!TestBlockValidity(state, chainparams, *pblock, pindexPrev, false, false)) {
-    //        throw std::runtime_error(strprintf("%s: TestBlockValidity failed: %s", __func__, FormatStateMessage(state)));
-    //    }
+    if (!TestBlockValidity(state, chainparams, *pblock, pindexPrev, false, false)) {
+        throw std::runtime_error(strprintf("%s: TestBlockValidity failed: %s", __func__, FormatStateMessage(state)));
+    }
     int64_t nTime2 = GetTimeMicros();
 
     LogPrint(BCLog::BENCH, "CreateNewBlock() packages: %.2fms (%d packages, %d updated descendants), validity: %.2fms (total %.2fms)\n", 0.001 * (nTime1 - nTimeStart), nPackagesSelected, nDescendantsUpdated, 0.001 * (nTime2 - nTime1), 0.001 * (nTime2 - nTimeStart));
@@ -570,9 +535,9 @@ static bool ProcessBlockFound(const std::shared_ptr<const CBlock> &pblock, const
 
 void static BitcoinMiner(const CChainParams& chainparams, CConnman& connman, CWallet* pwallet, bool fProofOfStake)
 {
-    LogPrintf("bitcoinminer -- started\n");
+    LogPrintf("XPChain -- started\n");
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
-    RenameThread("bitcoin-miner");
+    RenameThread("xpchain-miner");
 
     unsigned int nExtraNonce = 0;
 
@@ -581,8 +546,6 @@ void static BitcoinMiner(const CChainParams& chainparams, CConnman& connman, CWa
 
     while (true) {
         try {
-
-            MilliSleep(1000);
 
             // Throw an error if no script was provided.  This can happen
             // due to some internal error but also if the keypool is empty.
@@ -621,14 +584,14 @@ void static BitcoinMiner(const CChainParams& chainparams, CConnman& connman, CWa
             auto pblocktemplate = assemlber.CreateNewBlock(pwallet, coinbaseScript->reserveScript, fProofOfStake, true);
             if (!pblocktemplate.get())
             {
-                LogPrintf("bitcoinminer -- Failed to find a coinstake\n");
+                LogPrintf("XPChain -- Failed to find a coinstake\n");
                 MilliSleep(5000);
                 continue;
             }
             auto pblock = std::make_shared<CBlock>(pblocktemplate->block);
             IncrementExtraNonce(pblock.get(), pindexPrev, nExtraNonce);
 
-            LogPrintf("BitcoinMiner -- Running miner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
+            LogPrintf("XPChain -- Running miner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
                       ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
             //Sign block
@@ -637,7 +600,7 @@ void static BitcoinMiner(const CChainParams& chainparams, CConnman& connman, CWa
                 LogPrintf("CPUMiner : proof-of-stake block found %s \n", pblock->GetHash().ToString().c_str());
 
                 if (!SignBlock(*pblock, *pwallet)) {
-                    LogPrintf("BitcoinMiner(): Signing new block failed \n");
+                    LogPrintf("XPChain(): Signing new block failed \n");
                     throw std::runtime_error(strprintf("%s: SignBlock failed", __func__));
                 }
 
@@ -676,7 +639,7 @@ void static BitcoinMiner(const CChainParams& chainparams, CConnman& connman, CWa
                     {
                         // Found a solution
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                        LogPrintf("bitcoinminer:\n  proof-of-work found\n  hash: %s\n  target: %s\n", hash.GetHex(), hashTarget.GetHex());
+                        LogPrintf("XPChain:\n  proof-of-work found\n  hash: %s\n  target: %s\n", hash.GetHex(), hashTarget.GetHex());
                         ProcessBlockFound(pblock, chainparams);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
                         coinbaseScript->KeepScript();
@@ -707,12 +670,12 @@ void static BitcoinMiner(const CChainParams& chainparams, CConnman& connman, CWa
         }
         catch (const boost::thread_interrupted&)
         {
-            LogPrintf("BitcoinMiner -- terminated\n");
+            LogPrintf("XPChain -- terminated\n");
             throw;
         }
         catch (const std::runtime_error &e)
         {
-            LogPrintf("bitcoinminer -- runtime error: %s\n", e.what());
+            LogPrintf("XPChain -- runtime error: %s\n", e.what());
             //            return;
         }
     }

@@ -930,3 +930,26 @@ void CMasternodeVerification::Relay() const
         pnode->PushInventory(inv);
     });
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CAmount CMasternode::CheckOutPointValue(const COutPoint& outpoint)
+{
+    AssertLockHeld(cs_main);
+    Coin coin;
+    if(!GetUTXOCoin(outpoint, coin))
+        return 0;
+    return coin.out.nValue;
+}
+
+int CMasternode::RetrieveMNType()
+{
+    int mnType = 0;
+    CAmount nOutPointValue = CheckOutPointValue(vin.prevout);
+    for(int i=0; i<Params().CollateralLevels(); i++)
+        if((nOutPointValue * COIN) == (Params().ValidCollateralAmounts()[i] * COIN))
+           return mnType;
+    return(Params().CollateralLevels());
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////

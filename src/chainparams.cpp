@@ -163,7 +163,7 @@ public:
         fDefaultConsistencyChecks = false;
         fRequireStandard = true;
         fMineBlocksOnDemand = false;
-        nCollateralLevels = { 0 };
+        nCollateralLevels = { 15000000, 30000000, 60000000 };
         nPoolMaxTransactions = 3;
         nFulfilledRequestExpireTime = 60*60;
         strSporkPubKey = "";
@@ -201,6 +201,106 @@ class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
         strNetworkID = "test";
+        consensus.nFirstPoSBlock = 50;
+        consensus.nInstantSendKeepLock = 24;
+        consensus.nBudgetPaymentsStartBlock = 0;
+        consensus.nBudgetPaymentsCycleBlocks = 16616;
+        consensus.nBudgetPaymentsWindowBlocks = 100;
+        consensus.nBudgetProposalEstablishingTime = 60*60*24;
+        consensus.nSuperblockCycle = 43200;
+        consensus.nSuperblockStartBlock = consensus.nSuperblockCycle;
+        consensus.nGovernanceMinQuorum = 10;
+        consensus.nGovernanceFilterElements = 20000;
+        consensus.BIP34Height = 0;
+        consensus.BIP34Hash = uint256();
+        consensus.BIP65Height = 0;
+        consensus.BIP66Height = 0;
+        consensus.powLimit = uint256S("0000fffff0000000000000000000000000000000000000000000000000000000");
+        consensus.posLimit = uint256S("007ffff000000000000000000000000000000000000000000000000000000000");
+        consensus.nPowTargetTimespan = 180;
+        consensus.nPowTargetSpacing = 60;
+        consensus.nPosTargetSpacing = consensus.nPowTargetSpacing;
+        consensus.nPosTargetTimespan = consensus.nPowTargetTimespan;
+        consensus.nMasternodeMinimumConfirmations = 15;
+        consensus.nStakeMinAge = 60 * 10;
+        consensus.nStakeMaxAge = 60 * 60 * 24 * 60;
+        consensus.nModifierInterval = 60 * 20;
+        consensus.nCoinbaseMaturity = 20;
+        consensus.fPowAllowMinDifficultyBlocks = false;
+        consensus.fPowNoRetargeting = false;
+        consensus.nRuleChangeActivationThreshold = 1080;
+        consensus.nMinerConfirmationWindow = 1440;
+
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+
+        // Deployment of BIP68, BIP112, and BIP113.
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = Consensus::BIP9Deployment::ALWAYS_ACTIVE;
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
+
+        // Deployment of SegWit (BIP141, BIP143, and BIP147)
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = Consensus::BIP9Deployment::ALWAYS_ACTIVE;
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
+
+        // The best chain should have at least this much work.
+        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000000000000000000000");
+
+        // By default assume that the signatures in ancestors of this block are valid.
+        consensus.defaultAssumeValid = uint256S("0000000000000000000000000000000000000000000000000000000000000000");
+
+        /**
+         * The message start string is designed to be unlikely to occur in normal data.
+         * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
+         * a large 32-bit integer with any alignment.
+         */
+        pchMessageStart[0] = 0xf2;
+        pchMessageStart[1] = 0x57;
+        pchMessageStart[2] = 0xb2;
+        pchMessageStart[3] = 0xc1;
+        nDefaultPort = 38798;
+        nPruneAfterHeight = 100000;
+        nMaxReorganizationDepth = 100;
+
+	uint32_t nTime = 1563974000;
+	uint32_t nNonce = 0;
+	while (UintToArith256(genesis.GetHash()) > UintToArith256(consensus.powLimit)) {
+		nNonce++;
+		genesis = CreateGenesisBlock(nTime, nNonce, 0x1f00ffff, 1, 0 * COIN);
+	}
+        genesis = CreateGenesisBlock(nTime, nNonce, 0x1f00ffff, 1, 0 * COIN);
+	consensus.hashGenesisBlock = genesis.GetHash();
+
+        // assert(consensus.hashGenesisBlock == uint256S("0x000000009f4a28557aad6be5910c39d40e8a44e596d5ad485a9e4a7d4d72937c"));
+        // assert(genesis.hashMerkleRoot == uint256S("0xdaa610662c202dd51c892e6ff17ac1812a3ddcb998ec4923a3a315c409019739"));
+
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,28);
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,128);
+        base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x88, 0xB2, 0x1E};
+        base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x88, 0xAD, 0xE4};
+
+        bech32_hrp = "xpc";
+
+        fMiningRequiresPeers = false;
+        fDefaultConsistencyChecks = false;
+        fRequireStandard = true;
+        fMineBlocksOnDemand = false;
+        nCollateralLevels = { 15000000, 30000000, 60000000 };
+        nPoolMaxTransactions = 3;
+        nFulfilledRequestExpireTime = 60*60;
+        strSporkPubKey = "";
+
+        checkpointData = {
+        };
+
+        chainTxData = ChainTxData{
+        };
+
+        /* disable fallback fee on mainnet */
+        m_fallback_fee_enabled = false;
     }
 };
 
