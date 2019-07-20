@@ -138,19 +138,14 @@ void WalletFrame::gotoHistoryPage()
         i.value()->gotoHistoryPage();
 }
 
+// Dash
 void WalletFrame::gotoMasternodePage()
 {
     QMap<QString, WalletView*>::const_iterator i;
     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
         i.value()->gotoMasternodePage();
 }
-
-void WalletFrame::gotoGovernancePage()
-{
-    QMap<QString, WalletView*>::const_iterator i;
-    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
-        i.value()->gotoGovernancePage();
-}
+//
 
 void WalletFrame::gotoReceiveCoinsPage()
 {
