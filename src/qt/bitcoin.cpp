@@ -742,4 +742,5 @@ int main(int argc, char *argv[])
     }
     return rv;
 }
+
 #endif // BITCOIN_QT_TEST

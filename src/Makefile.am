@@ -142,6 +142,7 @@ BITCOIN_CORE_H = \
   key_io.h \
   keystore.h \
   kernel.h \
+  kernelrecord.h \
   dbwrapper.h \
   limitedmap.h \
   logging.h \
@@ -427,6 +428,7 @@ libbitcoin_common_a_SOURCES = \
   compressor.cpp \
   core_read.cpp \
   core_write.cpp \
+  kernelrecord.cpp \
   key.cpp \
   key_io.cpp \
   keystore.cpp \

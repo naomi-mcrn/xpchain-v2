@@ -92,6 +92,9 @@ QT_MOC_CPP = \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp \
+  qt/moc_mintingfilterproxy.cpp \
+  qt/moc_mintingtablemodel.cpp \
+  qt/moc_mintingview.cpp \
   qt/moc_masternodelist.cpp
 
 BITCOIN_MM = \
@@ -169,6 +172,9 @@ BITCOIN_QT_H = \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
   qt/winshutdownmonitor.h \
+  qt/mintingfilterproxy.h \
+  qt/mintingtablemodel.h \
+  qt/mintingview.h \
   qt/masternodelist.h
 
 RES_ICONS = \
@@ -203,6 +209,7 @@ RES_ICONS = \
   qt/res/icons/filesave.png \
   qt/res/icons/fontbigger.png \
   qt/res/icons/fontsmaller.png \
+  qt/res/icons/minting.png \
   qt/res/icons/bitcoin.ico \
   qt/res/icons/bitcoin_testnet.ico \
   qt/res/icons/bitcoin.png \
@@ -289,6 +296,9 @@ BITCOIN_QT_WALLET_CPP = \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
   qt/walletview.cpp \
+  qt/mintingfilterproxy.cpp \
+  qt/mintingtablemodel.cpp \
+  qt/mintingview.cpp \
   qt/masternodelist.cpp
 
 BITCOIN_QT_CPP = $(BITCOIN_QT_BASE_CPP)

@@ -38,6 +38,8 @@
 #include <qt/masternodelist.h>
 #include <miner.h>
 
+#include <wallet/wallet.h>
+
 #include <iostream>
 
 #include <QAction>
@@ -284,6 +286,13 @@ void BitcoinGUI::createActions()
     connect(masternodeAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(masternodeAction, SIGNAL(triggered()), this, SLOT(gotoMasternodePage()));
 
+    mintingAction = new QAction(platformStyle->SingleColorIcon(":/icons/minting"), tr("&Minting"), this);
+    mintingAction->setStatusTip(tr("Show your minting capacity"));
+    mintingAction->setToolTip(mintingAction->statusTip());
+    mintingAction->setCheckable(true);
+    mintingAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
+    tabGroup->addAction(mintingAction);
+
     // These showNormalIfMinimized are needed because Send Coins and Receive Coins
     // can be triggered from the tray menu, and need to show the GUI to be useful.
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -298,6 +307,8 @@ void BitcoinGUI::createActions()
     connect(receiveCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
+    connect(mintingAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(mintingAction, SIGNAL(triggered()), this, SLOT(gotoMintingPage()));
 #endif
 
     quitAction = new QAction(platformStyle->TextColorIcon(":/icons/quit"), tr("E&xit"), this);
@@ -483,6 +494,7 @@ void BitcoinGUI::createToolBars()
         toolbar->addAction(receiveCoinsAction);
         toolbar->addAction(historyAction);
         toolbar->addAction(masternodeAction);
+        toolbar->addAction(mintingAction);
         overviewAction->setChecked(true);
 
 #ifdef ENABLE_WALLET
@@ -832,6 +844,11 @@ void BitcoinGUI::gotoMasternodePage()
 {
     masternodeAction->setChecked(true);
     if (walletFrame) walletFrame->gotoMasternodePage();
+}
+
+void BitcoinGUI::gotoMintingPage()
+{
+    if (walletFrame) walletFrame->gotoMintingPage();
 }
 
 void BitcoinGUI::gotoReceiveCoinsPage()

@@ -52,4 +52,9 @@ static const int MAX_URI_LENGTH = 255;
 #define QAPP_APP_NAME_TESTNET "Bitcoin-Qt-testnet"
 #define QAPP_APP_NAME_REGTEST "Bitcoin-Qt-regtest"
 
+/* Colors for minting tab for each coin age group */
+#define COLOR_MINT_YOUNG QColor(214, 231, 249)
+#define COLOR_MINT_MATURE QColor(200, 255, 216)
+#define COLOR_MINT_OLD QColor(255, 218, 223)
+
 #endif // BITCOIN_QT_GUICONSTANTS_H

@@ -34,6 +34,7 @@ class WalletModel;
 class HelpMessageDialog;
 class ModalOverlay;
 class MasternodeList;
+class MintingView;
 
 namespace interfaces {
 class Handler;
@@ -108,6 +109,7 @@ private:
     QAction* overviewAction = nullptr;
     QAction* historyAction = nullptr;
     QAction* masternodeAction = nullptr;
+    QAction* mintingAction = nullptr;
     QAction* quitAction = nullptr;
     QAction* sendCoinsAction = nullptr;
     QAction* sendCoinsMenuAction = nullptr;
@@ -146,6 +148,7 @@ private:
     QSystemTrayIcon* trayIcon = nullptr;
     QMenu* trayIconMenu = nullptr;
     Notificator* notificator = nullptr;
+    MintingView* mintingView = nullptr;
     RPCConsole* rpcConsole = nullptr;
     HelpMessageDialog* helpMessageDialog = nullptr;
     ModalOverlay* modalOverlay = nullptr;
@@ -246,8 +249,8 @@ private Q_SLOTS:
 
     /** Switch to masternode page */
     void gotoMasternodePage();
-    //
-
+    /** Switch to minting page */
+    void gotoMintingPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */

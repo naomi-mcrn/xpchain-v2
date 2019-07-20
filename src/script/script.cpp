@@ -18,6 +18,8 @@ inline std::string ValueString(const std::vector<unsigned char>& vch)
 }
 } // anon namespace
 
+#include <key.h>
+
 const char* GetOpName(opcodetype opcode)
 {
     switch (opcode)
@@ -403,4 +405,17 @@ std::string CScript::ToString() const
             str += GetOpName(opcode);
     }
     return str;
+}
+
+void CScript::SetMultisig(int nRequired, const std::vector<CPubKey>& keys)
+{
+    this->clear();
+
+    *this << EncodeOP_N(nRequired);
+    for (const auto& pubkey : keys)
+    {
+        std::vector<unsigned char> vchPubKey(pubkey.begin(), pubkey.end());
+        *this << vchPubKey;
+    }
+    *this << EncodeOP_N(keys.size()) << OP_CHECKMULTISIG;
 }

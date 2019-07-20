@@ -20,6 +20,7 @@ class ReceiveCoinsDialog;
 class SendCoinsDialog;
 class SendCoinsRecipient;
 class TransactionView;
+class MintingView;
 class WalletModel;
 class AddressBookPage;
 
@@ -64,6 +65,7 @@ private:
 
     OverviewPage *overviewPage;
     QWidget *transactionsPage;
+    QWidget *mintingPage;
     ReceiveCoinsDialog *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
     AddressBookPage *usedSendingAddressesPage;
@@ -72,6 +74,7 @@ private:
     MasternodeList *masternodeListPage;
 
     TransactionView *transactionView;
+    MintingView *mintingView;
 
     QProgressDialog *progressDialog;
     const PlatformStyle *platformStyle;
@@ -84,7 +87,8 @@ public Q_SLOTS:
 
     /** Switch to masternode page */
     void gotoMasternodePage();
-
+    /** Switch to minting page */
+    void gotoMintingPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
