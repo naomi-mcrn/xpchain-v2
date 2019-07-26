@@ -44,7 +44,7 @@
 #include <memory>
 
 #if defined(NDEBUG)
-# error "Bitcoin cannot be compiled without assertions."
+# error "XPChain cannot be compiled without assertions."
 #endif
 
 std::atomic<int64_t> nTimeBestReceived(0); // Used only to inform the wallet of when we last received a block
@@ -3834,7 +3834,7 @@ enum {
     // Nodes may always request a MSG_FILTERED_BLOCK in a getdata, however,
     // MSG_FILTERED_BLOCK should not appear in any invs except as a part of getdata.
     MSG_FILTERED_BLOCK,
-    // Bitcoin message types
+    // XPChain message types
     // NOTE: declare non-implmented here, we must keep this enum consistent and backwards compatible
     MSG_TXLOCK_REQUEST,
     MSG_TXLOCK_VOTE,
@@ -3977,7 +3977,7 @@ void net_processing_bitcoin::ProcessExtension(CNode *pfrom, const std::string &s
 
 void net_processing_bitcoin::ThreadProcessExtensions(CConnman *pConnman)
 {
-    if(fLiteMode) return; // disable all Bitcoin specific functionality
+    if(fLiteMode) return; // disable all XPChain specific functionality
 
     static bool fOneThread;
     if(fOneThread) return;
@@ -4034,7 +4034,7 @@ bool net_processing_bitcoin::AlreadyHave(const CInv &inv)
     switch(inv.type)
     {
     /*
-    Bitcoin Related Inventory Messages
+    XPChain Related Inventory Messages
 
     --
 

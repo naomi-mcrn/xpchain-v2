@@ -85,7 +85,7 @@ const int64_t nStartupTime = GetTime();
 const char * const BITCOIN_CONF_FILENAME = "xpchain.conf";
 const char * const BITCOIN_PID_FILENAME = "xpchaind.pid";
 
-//Bitcoin only features
+//XPChain only features
 bool fMasterNode = false;
 bool fLiteMode = false;
 
