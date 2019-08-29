@@ -205,8 +205,7 @@ void MintingView::exportClicked()
     writer.setModel(mintingProxyModel);
     writer.addColumn(tr("Address"), MintingTableModel::Address);
     writer.addColumn(tr("Transaction"), MintingTableModel::TxHash);
-    writer.addColumn(tr("Age"), MintingTableModel::Age);
-    writer.addColumn(tr("CoinDay"), MintingTableModel::CoinDay);
+    writer.addColumn(tr("Age"), MintingTableModel::CoinDay);
     writer.addColumn(tr("Balance"), MintingTableModel::Balance);
     writer.addColumn(tr("MintingProbability"), MintingTableModel::MintProbability);
     writer.addColumn(tr("MintingReward"), MintingTableModel::MintReward,0);

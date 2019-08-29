@@ -8,6 +8,8 @@
 #include <primitives/transaction.h>
 #include <script/interpreter.h>
 #include <consensus/validation.h>
+#include <util.h>
+#include <abpos2.h>
 
 // TODO remove the following dependencies
 #include <chain.h>
@@ -218,6 +220,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
     for (unsigned int i = 0; i < tx.vin.size(); ++i) {
         const COutPoint &prevout = tx.vin[i].prevout;
         const Coin& coin = inputs.AccessCoin(prevout);
+
         assert(!coin.IsSpent());
 
         // If prev is coinbase, check that it's matured

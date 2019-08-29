@@ -152,7 +152,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const Consensus:
     if(fProofOfStake)
         nBits = PoSWorkRequired(pindexLast, params);
     else
-        nBits = DualKGW3(pindexLast, params);
+        nBits = UintToArith256(params.powLimit).GetCompact();
     return nBits;
 }
 

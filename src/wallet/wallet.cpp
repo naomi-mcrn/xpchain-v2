@@ -5,6 +5,7 @@
 
 #include <wallet/wallet.h>
 
+#include <abpos2.h>
 #include <checkpoints.h>
 #include <chain.h>
 #include <wallet/coincontrol.h>
@@ -371,11 +372,6 @@ bool CWallet::AddWatchOnly(const CScript& dest)
     UpdateTimeFirstKey(meta.nCreateTime);
     NotifyWatchonlyChanged(true);
     return WalletBatch(*database).WriteWatchOnly(dest, meta);
-}
-
-CAmount GetStakeReward(CAmount blockReward, unsigned int percentage)
-{
-    return (blockReward / 100) * percentage;
 }
 
 bool CWallet::AddWatchOnly(const CScript& dest, int64_t nCreateTime)
@@ -2611,12 +2607,6 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const CoinEligibil
 
 bool CWallet::MintableCoins()
 {
-    //    CAmount nBalance = GetBalance();
-    //    if (mapArgs.count("-reservebalance") && !ParseMoney(mapArgs["-reservebalance"], nReserveBalance))
-    //        return error("MintableCoins() : invalid reserve balance amount");
-    //    if (nBalance <= nReserveBalance)
-    //        return false;
-
     std::vector<COutput> vCoins;
     LOCK2(cs_main, cs_wallet);
     AvailableCoins(vCoins, true);
@@ -3294,16 +3284,14 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CTransac
     return true;
 }
 
-bool CWallet::CreateCoinStakeKernel(CScript &kernelScript, const CScript &stakeScript,
-                                    unsigned int nBits, const CBlock &blockFrom,
-                                    unsigned int nTxPrevOffset, const CTransactionRef &txPrev,
-                                    const COutPoint &prevout, unsigned int &nTimeTx, bool fPrintProofOfStake) const
+bool CWallet::CreateCoinStakeKernel(CScript &kernelScript, const CScript &stakeScript, unsigned int nBits, const CBlock &blockFrom, unsigned int nTxPrevOffset, const CTransactionRef &txPrev, const COutPoint &prevout, unsigned int &nTimeTx, bool fPrintProofOfStake) const
 {
     unsigned int nTryTime = 0;
-    uint256 hashProofOfStake;
+    uint256 hashProofOfStake = uint256();
 
     if (blockFrom.GetBlockTime() + Params().GetConsensus().nStakeMinAge + nHashDrift > nTimeTx) // Min age requirement
         return false;
+
     for(unsigned int i = 0; i < nHashDrift; ++i)
     {
         nTryTime = nTimeTx - i;
@@ -3325,18 +3313,14 @@ bool CWallet::CreateCoinStakeKernel(CScript &kernelScript, const CScript &stakeS
     return false;
 }
 
-void CWallet::FillCoinStakePayments(CMutableTransaction &transaction,
-                                    const CScript &scriptPubKeyOut,
-                                    const COutPoint &stakePrevout,
-                                    CAmount blockReward) const
+void CWallet::FillCoinStakePayments(CMutableTransaction &transaction, const CScript &scriptPubKeyOut, const COutPoint &stakePrevout, CAmount blockReward) const
 {
     const CWalletTx *walletTx = GetWalletTx(stakePrevout.hash);
     CTxOut prevTxOut = walletTx->tx->vout[stakePrevout.n];
-    auto nCredit = prevTxOut.nValue;
+    CAmount nCredit = abs(prevTxOut.nValue);
+    int64_t nCoinAge = GetStakeInputAge(stakePrevout.hash, 0);
+    CAmount nCoinStakeReward = nCredit + GetProofOfStakeReward(nCoinAge);
 
-    CAmount nReward = GetProofOfStakeReward();
-
-    auto nCoinStakeReward = nCredit + nReward;
     transaction.vin.emplace_back(CTxIn(stakePrevout));
     transaction.vout.emplace_back(nCoinStakeReward, scriptPubKeyOut);
     {
@@ -3370,13 +3354,7 @@ bool CWallet::GetKey(const CKeyID &address, CKey& keyOut) const
 }
 
 typedef std::vector<unsigned char> valtype;
-bool CWallet::CreateCoinStake(const CKeyStore& keystore,
-                              unsigned int nBits,
-                              CAmount blockReward,
-                              CMutableTransaction &txNew,
-                              unsigned int &nTxNewTime,
-                              std::vector<const CWalletTx*> &vwtxPrev,
-                              bool fGenerateSegwit)
+bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, CAmount blockReward, CMutableTransaction &txNew,unsigned int &nTxNewTime, std::vector<const CWalletTx*> &vwtxPrev, bool fGenerateSegwit)
 {
     // The following split & combine thresholds are important to security
     // Should not be adjusted if you don't understand the consequences
@@ -3438,9 +3416,8 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore,
         //iterates each utxo inside of CheckStakeKernelHash()
         CScript kernelScript;
         auto stakeScript = pcoin.first->tx->vout[pcoin.second].scriptPubKey;
-        fKernelFound = CreateCoinStakeKernel(kernelScript, stakeScript, nBits,
-                                             block, sizeof(CBlock), pcoin.first->tx,
-                                             prevoutStake, nTxNewTime, false);
+        fKernelFound = CreateCoinStakeKernel(kernelScript, stakeScript, nBits, block, sizeof(CBlock), pcoin.first->tx, prevoutStake, nTxNewTime, false); 
+
         if(fKernelFound)
         {
             FillCoinStakePayments(txNew, kernelScript, prevoutStake, blockReward);
@@ -3460,8 +3437,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore,
     int nHeight = chainActive.Tip()->nHeight + 1;
     FillBlockPayments(txNew, nHeight, blockReward, txoutMasternode, voutSuperblock);
     AdjustMasternodePayment(txNew, txoutMasternode);
-    LogPrintf("CreateCoinStake -- nBlockHeight %d blockReward %lld txoutMasternode %s txNew %s",
-              nHeight, blockReward, txoutMasternode.ToString(), txNew.ToString());
+    LogPrintf("CreateCoinStake -- nBlockHeight %d blockReward %lld txoutMasternode %s txNew %s", nHeight, blockReward, txoutMasternode.ToString(), txNew.ToString());
     nLastStakeSetUpdate = 0; //this will trigger stake set to repopulate next round
     return true;
 }

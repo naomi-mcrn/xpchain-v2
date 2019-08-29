@@ -197,7 +197,6 @@ void CMasternodeMan::CheckAndRemove(CConnman& connman)
     if(!masternodeSync.IsMasternodeListSynced()) return;
 
     LogPrint(BCLog::MASTERNODE, "CMasternodeMan::CheckAndRemove\n");
-
     {
         // Need LOCK2 here to ensure consistent locking order because code below locks cs_main
         // in CheckMnbAndUpdateMasternodeList()
@@ -207,12 +206,14 @@ void CMasternodeMan::CheckAndRemove(CConnman& connman)
 
         // Remove spent masternodes, prepare structures and make requests to reasure the state of inactive ones
         rank_pair_vec_t vecMasternodeRanks;
-        // ask for up to MNB_RECOVERY_MAX_ASK_ENTRIES masternode entries at a time
-        int nAskForMnbRecovery = MNB_RECOVERY_MAX_ASK_ENTRIES;
+        int nAskForMnbRecovery = 1; // ask one at a time, esp keeping
+                                    // phantomnodes in consideration
         std::map<COutPoint, CMasternode>::iterator it = mapMasternodes.begin();
+
         while (it != mapMasternodes.end()) {
             CMasternodeBroadcast mnb = CMasternodeBroadcast(it->second);
             uint256 hash = mnb.GetHash();
+
             // If collateral was spent ...
             if (it->second.IsOutpointSpent() ||
                 it->second.IsExpired()) {
@@ -226,12 +227,44 @@ void CMasternodeMan::CheckAndRemove(CConnman& connman)
                 it->second.FlagGovernanceItemsAsDirty();
                 mapMasternodes.erase(it++);
                 fMasternodesRemoved = true;
-            } else {
-                bool fAsk = (nAskForMnbRecovery > 0) &&
+
+            }
+
+            // Perform a simple connect ...
+            bool fTestComms = false;
+            bool fHaveTried = false;
+            while (fTestComms == false) {
+
+                if(fHaveTried == false) {
+                   LogPrint(BCLog::MASTERNODE, "CMasternodeMan::CheckAndRemove -- Performing simple connection test to %s\n", it->second.addr.ToString());
+                   mnodeman.CheckMasternode(it->second.pubKeyMasternode, true);
+                   usleep(1500);
+                   fHaveTried = true;
+                }
+
+                masternode_info_t infoMn;
+                if(!mnodeman.GetMasternodeInfo(it->second.pubKeyMasternode, infoMn)) {
+                   LogPrint(BCLog::MASTERNODE, "CMasternodeMan::CheckAndRemove -- Removing Masternode: %s  addr=%s  %i (didnt respond in 1500ms)\n",
+                                               it->second.GetStateString(), it->second.addr.ToString(), size() - 1);
+                   mapSeenMasternodeBroadcast.erase(hash);
+                   mWeAskedForMasternodeListEntry.erase(it->first);
+                   it->second.FlagGovernanceItemsAsDirty();
+                   mapMasternodes.erase(it++);
+                   fMasternodesRemoved = true;
+                   fTestComms = true;
+                } else {
+                   LogPrint(BCLog::MASTERNODE, "CMasternodeMan::CheckAndRemove -- %s responded correctly\n", it->second.addr.ToString());
+                   fTestComms = true;
+                   fMasternodesRemoved = false;
+                }
+            }
+
+            // we're now here
+            bool fAsk = (nAskForMnbRecovery > 0) &&
                         masternodeSync.IsSynced() &&
                         it->second.IsNewStartRequired() &&
                         !IsMnbRecoveryRequested(hash);
-                if(fAsk) {
+            if(fAsk) {
                     // this mn is in a non-recoverable state and we haven't asked other nodes yet
                     std::set<CNetAddr> setRequested;
                     // calulate only once and only when it's needed
@@ -279,8 +312,7 @@ void CMasternodeMan::CheckAndRemove(CConnman& connman)
                 mMnbRecoveryGoodReplies.erase(itMnbReplies++);
             } else {
                 ++itMnbReplies;
-            }
-        }
+         }
     }
     {
         // no need for cm_main below

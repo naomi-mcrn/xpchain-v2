@@ -44,6 +44,7 @@
 #include <kernel.h>
 #include <masternode-payments.h>
 #include <blocksigner.h>
+#include <abpos2.h>
 
 #include <future>
 #include <sstream>
@@ -2814,7 +2815,8 @@ bool CChainState::ActivateBestChain(CValidationState &state, const CChainParams&
         if (ShutdownRequested())
             break;
     } while (pindexNewTip != pindexMostWork);
-    CheckBlockIndex(chainparams.GetConsensus());
+    if (!IsInitialBlockDownload())
+	CheckBlockIndex(chainparams.GetConsensus());
 
     // Write changes periodically to disk, after relay.
     if (!FlushStateToDisk(chainparams, state, FlushStateMode::PERIODIC)) {
@@ -3579,7 +3581,8 @@ bool CChainState::AcceptBlockHeader(const CBlockHeader& block, CValidationState&
     // Notify external listeners about accepted block header
     GetMainSignals().AcceptedBlockHeader(pindex);
 
-    CheckBlockIndex(chainparams.GetConsensus());
+    if (!IsInitialBlockDownload())
+	CheckBlockIndex(chainparams.GetConsensus());
 
     return true;
 }
@@ -3777,7 +3780,8 @@ bool CChainState::AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CVali
 
     FlushStateToDisk(chainparams, state, FlushStateMode::NONE);
 
-    CheckBlockIndex(chainparams.GetConsensus());
+    if (!IsInitialBlockDownload())
+	CheckBlockIndex(chainparams.GetConsensus());
 
     return true;
 }
@@ -4482,7 +4486,8 @@ bool CChainState::RewindBlockIndex(const CChainParams& params)
         // no tip due to chainActive being empty!
         PruneBlockIndexCandidates();
 
-        CheckBlockIndex(params.GetConsensus());
+        if (!IsInitialBlockDownload())
+	    CheckBlockIndex(params.GetConsensus());
     }
 
     return true;

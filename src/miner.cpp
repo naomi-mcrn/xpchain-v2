@@ -114,8 +114,6 @@ void BlockAssembler::resetBlock()
 
 std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CWallet *wallet, const CScript &scriptPubKeyIn, bool fProofOfStake, bool fMineWitnessTx)
 {
-    int64_t nTimeStart = GetTimeMicros();
-
     resetBlock();
 
     pblocktemplate.reset(new CBlockTemplate());
@@ -159,8 +157,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CWallet *wallet, 
     // transaction (which in most cases can be a no-op).
     fIncludeWitness = IsWitnessEnabled(pindexPrev, chainparams.GetConsensus()) && fMineWitnessTx;
 
-    int64_t nTime1 = GetTimeMicros();
-
     nLastBlockTx = nBlockTx;
     nLastBlockWeight = nBlockWeight;
 
@@ -182,26 +178,20 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CWallet *wallet, 
         bool fStakeFound = false;
         if (nSearchTime >= nLastCoinStakeSearchTime) {
             unsigned int nTxNewTime = 0;
-            if (wallet->CreateCoinStake(*wallet, pblock->nBits, blockReward,
-                                        coinstakeTx, nTxNewTime,
-                                        vwtxPrev, fIncludeWitness))
+            if (wallet->CreateCoinStake(*wallet, pblock->nBits, blockReward, coinstakeTx, nTxNewTime, vwtxPrev, fIncludeWitness))
             {
                 pblock->nTime = nTxNewTime;
                 coinbaseTx.vout[0].SetEmpty();
                 pblock->vtx.emplace_back(MakeTransactionRef(coinstakeTx));
-
                 fStakeFound = true;
             }
-
             nLastCoinStakeSearchInterval = nSearchTime - nLastCoinStakeSearchTime;
             nLastCoinStakeSearchTime = nSearchTime;
         }
-
         if (!fStakeFound)
             return nullptr;
     }
-    else
-    {
+    else {
         if (nHeight <= Params().GetConsensus().nFirstPoSBlock) {
             coinbaseTx.vout[0].nValue = nFees + blockReward;
         }
@@ -233,10 +223,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CWallet *wallet, 
     if (!TestBlockValidity(state, chainparams, *pblock, pindexPrev, false, false)) {
         throw std::runtime_error(strprintf("%s: TestBlockValidity failed: %s", __func__, FormatStateMessage(state)));
     }
-    int64_t nTime2 = GetTimeMicros();
-
-    LogPrint(BCLog::BENCH, "CreateNewBlock() packages: %.2fms (%d packages, %d updated descendants), validity: %.2fms (total %.2fms)\n", 0.001 * (nTime1 - nTimeStart), nPackagesSelected, nDescendantsUpdated, 0.001 * (nTime2 - nTime1), 0.001 * (nTime2 - nTimeStart));
-
     LogPrintf("BlockCreated: %s\n", pblock->ToString());
 
     return std::move(pblocktemplate);
@@ -527,6 +513,7 @@ static bool ProcessBlockFound(const std::shared_ptr<const CBlock> &pblock, const
     // GetMainSignals().BlockFound(pblock->GetHash());
 
     // Process this block the same as if we had received it from another node
+    LOCK(cs_main);
     if (!ProcessNewBlock(chainparams, pblock, true, nullptr))
         return error("ProcessBlockFound -- ProcessNewBlock() failed, block not accepted");
 
@@ -546,6 +533,8 @@ void static BitcoinMiner(const CChainParams& chainparams, CConnman& connman, CWa
 
     while (true) {
         try {
+
+            MilliSleep(25);
 
             // Throw an error if no script was provided.  This can happen
             // due to some internal error but also if the keypool is empty.

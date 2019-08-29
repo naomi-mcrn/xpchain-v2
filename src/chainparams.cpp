@@ -75,6 +75,7 @@ public:
         strNetworkID = "main";
 
         consensus.nFirstPoSBlock = 100;
+        consensus.nAbPOS2Height = 0;
         consensus.nInstantSendKeepLock = 24;
         consensus.nBudgetPaymentsStartBlock = 0;
         consensus.nBudgetPaymentsCycleBlocks = 16616;
@@ -163,7 +164,7 @@ public:
         fDefaultConsistencyChecks = false;
         fRequireStandard = true;
         fMineBlocksOnDemand = false;
-        nCollateralLevels = { 15000000, 30000000, 60000000 };
+        nCollateralLevels = { 5000000, 25000000, 100000000 };
         nPoolMaxTransactions = 3;
         nFulfilledRequestExpireTime = 60*60;
         strSporkPubKey = "";
@@ -202,6 +203,7 @@ public:
     CTestNetParams() {
         strNetworkID = "test";
         consensus.nFirstPoSBlock = 50;
+        consensus.nAbPOS2Height  = consensus.nFirstPoSBlock;
         consensus.nInstantSendKeepLock = 24;
         consensus.nBudgetPaymentsStartBlock = 0;
         consensus.nBudgetPaymentsCycleBlocks = 16616;
