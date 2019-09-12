@@ -2,7 +2,7 @@
 #include <qt/test/util.h>
 
 #include <interfaces/node.h>
-#include <qt/bitcoinamountfield.h>
+#include <qt/xpchainamountfield.h>
 #include <qt/callback.h>
 #include <qt/optionsmodel.h>
 #include <qt/platformstyle.h>

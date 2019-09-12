@@ -3424,9 +3424,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, CAm
             break;
         }
     }
-    if(!fKernelFound)
-    {
-        LogPrintf("Failed to find coinstake kernel");
+    if(!fKernelFound) {
         return false;
     }
 

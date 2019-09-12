@@ -522,7 +522,6 @@ static bool ProcessBlockFound(const std::shared_ptr<const CBlock> &pblock, const
 
 void static BitcoinMiner(const CChainParams& chainparams, CConnman& connman, CWallet* pwallet, bool fProofOfStake)
 {
-    LogPrintf("XPChain -- started\n");
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
     RenameThread("xpchain-miner");
 

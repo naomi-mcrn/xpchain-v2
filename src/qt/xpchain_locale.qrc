@@ -1,0 +1,19 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="de">locale/xpchain_de.qm</file>
+        <file alias="en">locale/xpchain_en.qm</file>
+        <file alias="es">locale/xpchain_es.qm</file>
+        <file alias="fi">locale/xpchain_fi.qm</file>
+        <file alias="fr">locale/xpchain_fr.qm</file>
+        <file alias="it">locale/xpchain_it.qm</file>
+        <file alias="ja">locale/xpchain_ja.qm</file>
+        <file alias="pl">locale/xpchain_pl.qm</file>
+        <file alias="pt">locale/xpchain_pt.qm</file>
+        <file alias="ru">locale/xpchain_ru.qm</file>
+        <file alias="sk">locale/xpchain_sk.qm</file>
+        <file alias="sv">locale/xpchain_sv.qm</file>
+        <file alias="vi">locale/xpchain_vi.qm</file>
+        <file alias="zh_CN">locale/xpchain_zh_CN.qm</file>
+        <file alias="zh_TW">locale/xpchain_zh_TW.qm</file>
+    </qresource>
+</RCC>

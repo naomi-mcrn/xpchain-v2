@@ -8,16 +8,16 @@ define(_CLIENT_VERSION_IS_RELEASE, true)
 define(_COPYRIGHT_YEAR, 2019)
 define(_COPYRIGHT_HOLDERS,[The %s developers])
 define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[XPChain]])
-AC_INIT([Bitcoin Core],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[https://github.com/xpc-wg/xpchain/issues],[xpchain],[https://xpchain.net/])
+AC_INIT([XPChain],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[https://github.com/xpc-wg/xpchain/issues],[xpchain],[https://xpchain.net/])
 AC_CONFIG_SRCDIR([src/validation.cpp])
 AC_CONFIG_HEADERS([src/config/bitcoin-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
-BITCOIN_DAEMON_NAME=bitcoind
-BITCOIN_GUI_NAME=bitcoin-qt
-BITCOIN_CLI_NAME=bitcoin-cli
-BITCOIN_TX_NAME=bitcoin-tx
+BITCOIN_DAEMON_NAME=xpchaind
+BITCOIN_GUI_NAME=xpchain-qt
+BITCOIN_CLI_NAME=xpchain-cli
+BITCOIN_TX_NAME=xpchain-tx
 
 dnl Unless the user specified ARFLAGS, force it to be cr
 AC_ARG_VAR(ARFLAGS, [Flags for the archiver, defaults to <cr> if not set])
@@ -895,7 +895,7 @@ define(MINIMUM_REQUIRED_BOOST, 1.47.0)
 dnl Check for boost libs
 AX_BOOST_BASE([MINIMUM_REQUIRED_BOOST])
 if test x$want_boost = xno; then
-    AC_MSG_ERROR([[only libbitcoinconsensus can be built without boost]])
+    AC_MSG_ERROR([[only libxpchainconsensus can be built without boost]])
 fi
 AX_BOOST_SYSTEM
 AX_BOOST_FILESYSTEM
@@ -1201,7 +1201,7 @@ AC_MSG_CHECKING([whether to build libraries])
 AM_CONDITIONAL([BUILD_BITCOIN_LIBS], [test x$build_bitcoin_libs = xyes])
 if test x$build_bitcoin_libs = xyes; then
   AC_DEFINE(HAVE_CONSENSUS_LIB, 1, [Define this symbol if the consensus lib has been built])
-  AC_CONFIG_FILES([libbitcoinconsensus.pc:libbitcoinconsensus.pc.in])
+  AC_CONFIG_FILES([libxpchainconsensus.pc:libxpchainconsensus.pc.in])
 fi
 AC_MSG_RESULT($build_bitcoin_libs)
 

@@ -1,7 +1,7 @@
 #ifndef BITCOIN_QT_MINTINGTABLEMODEL_H
 #define BITCOIN_QT_MINTINGTABLEMODEL_H
 
-#include <qt/bitcoinunits.h>
+#include <qt/xpchainunits.h>
 
 #include <QAbstractTableModel>
 #include <QStringList>

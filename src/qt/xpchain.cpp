@@ -7,7 +7,7 @@
 #include <config/bitcoin-config.h>
 #endif
 
-#include <qt/bitcoingui.h>
+#include <qt/xpchaingui.h>
 
 #include <chainparams.h>
 #include <qt/clientmodel.h>
@@ -245,7 +245,7 @@ private:
     void startThread();
 };
 
-#include <qt/bitcoin.moc>
+#include <qt/xpchain.moc>
 
 BitcoinCore::BitcoinCore(interfaces::Node& node) :
     QObject(), m_node(node)
@@ -566,8 +566,8 @@ int main(int argc, char *argv[])
     // Do not refer to data directory yet, this can be overridden by Intro::pickDataDirectory
 
     /// 1. Basic Qt initialization (not dependent on parameters or configuration)
-    Q_INIT_RESOURCE(bitcoin);
-    Q_INIT_RESOURCE(bitcoin_locale);
+    Q_INIT_RESOURCE(xpchain);
+    Q_INIT_RESOURCE(xpchain_locale);
 
     BitcoinApplication app(*node, argc, argv);
 #if QT_VERSION > 0x050100
