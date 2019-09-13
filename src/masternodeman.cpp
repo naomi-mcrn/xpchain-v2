@@ -12,6 +12,7 @@
 #include <netfulfilledman.h>
 #include <netmessagemaker.h>
 #include <script/standard.h>
+#include <unistd.h>
 #include <util.h>
 
 /** Masternode manager */

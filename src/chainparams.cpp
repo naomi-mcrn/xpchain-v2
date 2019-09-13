@@ -202,7 +202,7 @@ class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
         strNetworkID = "test";
-        consensus.nFirstPoSBlock = 50;
+        consensus.nFirstPoSBlock = 75;
         consensus.nAbPOS2Height  = consensus.nFirstPoSBlock;
         consensus.nInstantSendKeepLock = 24;
         consensus.nBudgetPaymentsStartBlock = 0;

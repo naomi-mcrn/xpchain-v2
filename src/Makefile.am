@@ -424,6 +424,7 @@ libxpchain_consensus_a_SOURCES = \
 libxpchain_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libxpchain_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libxpchain_common_a_SOURCES = \
+  abpos2.cpp \
   base58.cpp \
   bech32.cpp \
   chainparams.cpp \

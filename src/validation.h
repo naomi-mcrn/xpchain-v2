@@ -498,6 +498,4 @@ bool DumpMempool();
 /** Load the mempool from disk. */
 bool LoadMempool();
 
-CAmount GetProofOfStakeReward();
-
 #endif // BITCOIN_VALIDATION_H

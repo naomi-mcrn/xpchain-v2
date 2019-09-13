@@ -262,9 +262,8 @@ public:
 MintingTableModel::MintingTableModel(const PlatformStyle *_platformStyle, WalletModel *parent):
         QAbstractTableModel(parent),
         walletModel(parent),
-        mintingInterval(10),
+        mintingInterval(4),
         priv(new MintingTablePriv(this)),
-        //cachedNumBlocks(0),
         platformStyle(_platformStyle)
 {
     columns << tr("Transaction") <<  tr("Address") << tr("Balance") << tr("Age") << tr("CoinDay") << tr("MintProbability") << tr("MintReward");
@@ -446,8 +445,7 @@ QString MintingTableModel::lookupAddress(const std::string &address, bool toolti
 QString MintingTableModel::formatTxPoSReward(KernelRecord *wtx) const
 {
     QString posReward;
-    posReward += QString(QObject::tr("from  %1 to %2")).arg(BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), wtx->getPoSReward(0)),
-        BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), wtx->getPoSReward(mintingInterval)));
+    posReward += QString(QObject::tr("%1")).arg(BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), wtx->getPoSReward(mintingInterval)));
     return posReward;
 }
 double MintingTableModel::getDayToMint(KernelRecord *wtx) const

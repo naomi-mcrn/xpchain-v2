@@ -1,3 +1,4 @@
+#include <abpos2.h>
 #include <consensus/consensus.h>
 #include <interfaces/wallet.h>
 #include <key_io.h>
@@ -58,29 +59,18 @@ int64_t KernelRecord::getAge() const
 
 uint64_t KernelRecord::getCoinDay() const
 {
-    int64_t nWeight = GetAdjustedTime() - nTime - Params().GetConsensus().nStakeMinAge;
-    if( nWeight <  0)
-        return 0;
-    nWeight = min(nWeight, (int64_t)Params().GetConsensus().nStakeMaxAge);
-    uint64_t coinAge = (nValue * nWeight ) / (COIN * 86400);
-    return coinAge;
+    return (GetStakeInputAge(hash, GetAdjustedTime()) / 10000);
 }
 
 int64_t KernelRecord::getPoSReward(int minutes)
 {
-    int64_t PoSReward;
-    int64_t nWeight = GetAdjustedTime() - nTime + minutes * 60;
-    PoSReward = GetProofOfStakeReward();
-    return PoSReward;
+    int64_t nCoinAge = GetStakeInputAge(hash, GetAdjustedTime());
+    CAmount nCoinStakeReward = GetProofOfStakeReward(nCoinAge);
+    return nCoinStakeReward;
 }
 
 double KernelRecord::getProbToMintStake(double difficulty, int timeOffset) const
 {
-    //double maxTarget = pow(static_cast<double>(2), 224);
-    //double target = maxTarget / difficulty;
-    //int dayWeight = (min((GetAdjustedTime() - nTime) + timeOffset, (int64_t)(nStakeMinAge+nStakeMaxAge)) - nStakeMinAge) / 86400;
-    //uint64_t coinAge = max(nValue * dayWeight / COIN, (int64_t)0);
-    //return target * coinAge / pow(static_cast<double>(2), 256);
     int64_t Weight = (min((GetAdjustedTime() - nTime) + timeOffset, (int64_t)(Params().GetConsensus().nStakeMinAge+Params().GetConsensus().nStakeMaxAge)) - Params().GetConsensus().nStakeMinAge);
     uint64_t coinAge = max(nValue * Weight / (COIN * 86400), (int64_t)0);
     double probability = coinAge / (pow(static_cast<double>(2),32) * difficulty);

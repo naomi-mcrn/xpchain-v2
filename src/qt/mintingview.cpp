@@ -140,6 +140,7 @@ void MintingView::setModel(WalletModel *_model)
         mintingView->setSortingEnabled(true);
         mintingView->sortByColumn(MintingTableModel::CoinDay, Qt::DescendingOrder);
         mintingView->verticalHeader()->hide();
+        mintingView->setColumnHidden(3, true);
 
         mintingView->horizontalHeader()->resizeSection(
                 MintingTableModel::Address, 300);

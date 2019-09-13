@@ -1149,11 +1149,6 @@ CAmount GetMasternodePayment(int mnType, CAmount blockValue)
     return (15000 * COIN * (mnType + 1));
 }
 
-CAmount GetProofOfStakeReward()
-{
-    return GetBlockSubsidy(0, Params().GetConsensus(), false);
-}
-
 bool IsInitialBlockDownload()
 {
     // Once this function has returned false, it must remain false.

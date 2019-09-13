@@ -47,7 +47,7 @@ int GetStakeInputAge(uint256 stakeInputHash, int nBlockTime)
     int stakeInputAge = nBlockTime - nInputTime;
 
     LogPrintf("GetStakeInputAge()::Inputhash %s Age %llu\n", stakeInputHash.ToString().c_str(), stakeInputAge);
-    return stakeInputAge * 10000;
+    return stakeInputAge * 1000;
 }
 
 CAmount GetProofOfStakeReward(int64_t nCoinAge)
