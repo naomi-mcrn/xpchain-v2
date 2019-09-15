@@ -262,7 +262,7 @@ public:
 MintingTableModel::MintingTableModel(const PlatformStyle *_platformStyle, WalletModel *parent):
         QAbstractTableModel(parent),
         walletModel(parent),
-        mintingInterval(4),
+        mintingInterval(15),
         priv(new MintingTablePriv(this)),
         platformStyle(_platformStyle)
 {
