@@ -423,8 +423,8 @@ Var vänlig och försök igen.</translation>
         <translation>Verktygsfält för tabbar</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation>Begär betalningar (skapar QR-koder och bitcoin: -URIer)</translation>
+        <source>Request payments (generates QR codes and xpchain: URIs)</source>
+        <translation>Begär betalningar (skapar QR-koder och xpchain: -URIer)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -435,8 +435,8 @@ Var vänlig och försök igen.</translation>
         <translation>Visa listan med använda mottagningsadresser och etiketter</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI or payment request</source>
-        <translation>Öppna en bitcoin: URI eller betalningsbegäran</translation>
+        <source>Open a xpchain: URI or payment request</source>
+        <translation>Öppna en xpchain: URI eller betalningsbegäran</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -1283,8 +1283,8 @@ Var vänlig och försök igen.</translation>
         <translation>Fel vid betalningsbegäran</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation>Kan inte starta bitcoin: klicka-och-betala hanteraren</translation>
+        <source>Cannot start xpchain: click-to-pay handler</source>
+        <translation>Kan inte starta xpchain: klicka-och-betala hanteraren</translation>
     </message>
     <message>
         <source>URI handling</source>
@@ -2317,8 +2317,8 @@ Var vänlig och försök igen.</translation>
         <translation>Ange en etikett för denna adress för att lägga till den i listan med använda adresser</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the XPChain network.</source>
-        <translation>Ett meddelande som bifogades bitcoin: -URIn och som lagras med transaktionen som referens. NB: Meddelandet kommer inte att sändas över XPChain-nätverket.</translation>
+        <source>A message that was attached to the xpchain: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the XPChain network.</source>
+        <translation>Ett meddelande som bifogades xpchain: -URIn och som lagras med transaktionen som referens. NB: Meddelandet kommer inte att sändas över XPChain-nätverket.</translation>
     </message>
     <message>
         <source>Pay To:</source>

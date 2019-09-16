@@ -434,8 +434,8 @@
         <translation>タブツールバー</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation>支払いを要求する (QRコードとbitcoin:ではじまるURIを生成する)</translation>
+        <source>Request payments (generates QR codes and xpchain: URIs)</source>
+        <translation>支払いを要求する (QRコードとxpchain:ではじまるURIを生成する)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -446,8 +446,8 @@
         <translation>支払いを受け取るアドレスとラベルのリストを表示する</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI or payment request</source>
-        <translation>bitcoin: URIまたは支払いリクエストを開く</translation>
+        <source>Open a xpchain: URI or payment request</source>
+        <translation>xpchain: URIまたは支払いリクエストを開く</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -1328,7 +1328,7 @@
         <translation>支払いのリクエストのエラーです</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <source>Cannot start xpchain: click-to-pay handler</source>
         <translation>XPChain を起動できません: click-to-pay handler</translation>
     </message>
     <message>
@@ -1336,8 +1336,8 @@
         <translation>URI の操作</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation>'bitcoin://' は正しいURIではありません｡ 'bitcoin:'を利用してください｡</translation>
+        <source>'xpchain://' is not a valid URI. Use 'xpchain:' instead.</source>
+        <translation>'xpchain://' は正しいURIではありません｡ 'xpchain:'を利用してください｡</translation>
     </message>
     <message>
         <source>Payment request fetch URL is invalid: %1</source>
@@ -2422,8 +2422,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>このアドレスに対するラベルを入力することで、使用済みアドレスの一覧に追加することができます</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the XPChain network.</source>
-        <translation>bitcoin: URIに添付されていたメッセージです。これは参照用としてトランザクションとともに保存されます。注意：このメッセージはBitcoinネットワークを通して送信されるわけではありません。</translation>
+        <source>A message that was attached to the xpchain: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the XPChain network.</source>
+        <translation>xpchain: URIに添付されていたメッセージです。これは参照用としてトランザクションとともに保存されます。注意：このメッセージはBitcoinネットワークを通して送信されるわけではありません。</translation>
     </message>
     <message>
         <source>Pay To:</source>

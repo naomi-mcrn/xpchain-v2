@@ -434,8 +434,8 @@
         <translation>Barra de pestañas</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation>Solicitar pagos (generando códigos QR e identificadores URI "bitcoin:")</translation>
+        <source>Request payments (generates QR codes and xpchain: URIs)</source>
+        <translation>Solicitar pagos (generando códigos QR e identificadores URI "xpchain:")</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -446,8 +446,8 @@
         <translation>Muestra la lista de direcciones de recepción y etiquetas</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI or payment request</source>
-        <translation>Abrir un identificador URI "bitcoin:" o una petición de pago</translation>
+        <source>Open a xpchain: URI or payment request</source>
+        <translation>Abrir un identificador URI "xpchain:" o una petición de pago</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -1327,16 +1327,16 @@
         <translation>Fallo en la solicitud de pago</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation>No se puede iniciar bitcoin: encargado click-para-pagar</translation>
+        <source>Cannot start xpchain: click-to-pay handler</source>
+        <translation>No se puede iniciar xpchain: encargado click-para-pagar</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation>Manejo de URI</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation>'bitcoin: //' no es un URI válido. Use 'bitcoin:' en su lugar.</translation>
+        <source>'xpchain://' is not a valid URI. Use 'xpchain:' instead.</source>
+        <translation>'xpchain: //' no es un URI válido. Use 'xpchain:' en su lugar.</translation>
     </message>
     <message>
         <source>Payment request fetch URL is invalid: %1</source>
@@ -2421,8 +2421,8 @@ Nota: Dado que la comisión se calcula por byte, una comisión de "100 satoshis 
         <translation>Introduce una etiqueta para esta dirección para añadirla a la lista de direcciones utilizadas</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the XPChain network.</source>
-        <translation>Un mensaje que se adjuntó a la bitcoin: URL que será almacenada con la transacción para su referencia. Nota: Este mensaje no se envía a través de la red XPChain.</translation>
+        <source>A message that was attached to the xpchain: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the XPChain network.</source>
+        <translation>Un mensaje que se adjuntó a la xpchain: URL que será almacenada con la transacción para su referencia. Nota: Este mensaje no se envía a través de la red XPChain.</translation>
     </message>
     <message>
         <source>Pay To:</source>
