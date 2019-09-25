@@ -6,20 +6,36 @@
 #include <validation.h>
 #include <util.h>
 
+const bool fDebug = true;
+unsigned int launchTime = GetTime();
+std::map<uint256, int> inputFromCache;
+std::map<uint256, int>::iterator it;
+
 int GetStakeInputAge(uint256 stakeInputHash, int nBlockTime)
 {
     int nInputTime = 0;
 
-    // if this isnt provided, assume we want the current age
-    if (nBlockTime == 0)
-        nBlockTime = GetTime();
+    // flush cache every 5 min
+    if ((GetTime() - launchTime) > 300) {
+        inputFromCache.clear();
+        launchTime = GetTime();
+    }
 
-    // we will fail if this is a unspent coinbasetxn
-    if (stakeInputHash == uint256()) return 0;
+    // try retrieve stake nTime from cache..
+    it = inputFromCache.find(stakeInputHash);
+    if (it != inputFromCache.end()) {
+	nInputTime = it->second;
+	if (fDebug)
+	    LogPrintf("GetStakeInputAge()::CACHEHIT - %s %d\n",
+                      stakeInputHash.ToString().c_str(), nInputTime);
+    }
+
+    if (nBlockTime == 0) nBlockTime = GetTime(); // assume we want the current age
+    if (stakeInputHash == uint256()) return 0;   // fail if unspent coinbasetxn
 
     if (nInputTime == 0)
     {
-        // retrieve tx from disk..
+        // otherwise retrieve tx from disk..
         uint256 blockHashFrom;
         CTransactionRef stakeInputTx;
         if (!GetTransaction(stakeInputHash, stakeInputTx, Params().GetConsensus(), blockHashFrom))
@@ -35,6 +51,13 @@ int GetStakeInputAge(uint256 stakeInputHash, int nBlockTime)
             return error("GetStakeInputAge() : read block failed");
         if (!ReadBlockFromDisk(originBlock, pindex, Params().GetConsensus()))
             return 0;
+
+	// ..then put it in the cache..
+	nInputTime = originBlock.nTime;
+	inputFromCache.insert({stakeInputHash, nInputTime});
+        if (fDebug)
+            LogPrintf("GetStakeInputAge()::CACHEMISS - %s %d\n",
+                      stakeInputHash.ToString().c_str(), nInputTime);
 
         // ..then we're done
         nInputTime = originBlock.nTime;
