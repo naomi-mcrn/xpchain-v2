@@ -6,7 +6,7 @@
 #include <validation.h>
 #include <util.h>
 
-const bool fDebug = true;
+const bool fDebug = false;
 unsigned int launchTime = GetTime();
 std::map<uint256, int> inputFromCache;
 std::map<uint256, int>::iterator it;
@@ -69,7 +69,7 @@ int GetStakeInputAge(uint256 stakeInputHash, int nBlockTime)
     // return time in whole hours
     int stakeInputAge = nBlockTime - nInputTime;
 
-    LogPrintf("GetStakeInputAge()::Inputhash %s Age %llu\n", stakeInputHash.ToString().c_str(), stakeInputAge);
+    //LogPrintf("GetStakeInputAge()::Inputhash %s Age %llu\n", stakeInputHash.ToString().c_str(), stakeInputAge);
     return stakeInputAge * 1000;
 }
 
