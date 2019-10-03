@@ -2060,6 +2060,51 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
         pos.nTxOffset += ::GetSerializeSize(tx, SER_DISK, CLIENT_VERSION);
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    if (block.IsProofOfStake()) {
+
+       const auto& tx = block.vtx[1];
+       const auto& txin = tx->vin[0].prevout.hash;
+
+       CAmount totalCreated = nValueOut - nValueIn;
+       int64_t nCoinAge = GetStakeInputAge(txin, block.nTime);
+       CAmount nCoinStakeReward = GetProofOfStakeReward(nCoinAge);
+
+       // basic sanity checks
+       int stakeOutputs = tx->vout.size();
+       if (stakeOutputs < 5 || stakeOutputs > 6) {
+           LogPrintf("Invalid stake block (incorrect amount of outputs)\n");
+           return false;
+       }
+
+       // calc expected reward
+       CAmount expectedReward = COIN;
+       CAmount baseReward = GetBlockSubsidy(pindex->nHeight, Params().GetConsensus(), false);
+       for (unsigned int i = 0; i < 3; i++)
+            expectedReward += GetMasternodePayment(i, baseReward);
+       expectedReward += nCoinStakeReward;
+       LogPrintf("Height %d - %llu was created, %llu was expected\n", pindex->nHeight, totalCreated / COIN, expectedReward / COIN);
+       if ((totalCreated/COIN) > (expectedReward/COIN)) {
+          LogPrintf("Invalid stake block (reward for block is too high)\n");
+          return false;
+       }
+
+       // check expected tiers
+       int voutOffset = stakeOutputs - 3;
+       for (unsigned int i = 0; i < 3; i++) {
+           CAmount mnTierReward = tx->vout[voutOffset+i].nValue;
+           CAmount mnExpectedReward = GetMasternodePayment(i, baseReward);
+           LogPrintf("Tier %d; expected %llu got %llu\n", i, mnTierReward / COIN, mnExpectedReward / COIN);
+           if (mnTierReward != mnExpectedReward) {
+               LogPrintf("Invalid stake block (tier payout tampering)\n");
+               return false;
+           }
+       }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // ppcoin: track money supply and mint amount info
     CAmount nMoneySupplyPrev = pindex->pprev ? pindex->pprev->nMoneySupply : 0;
     pindex->nMoneySupply = nMoneySupplyPrev + nValueOut - nValueIn;

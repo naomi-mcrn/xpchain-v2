@@ -320,7 +320,6 @@ endif
 libxpchain_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libxpchain_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libxpchain_wallet_a_SOURCES = \
-  abpos2.cpp \
   outputtype.cpp \
   interfaces/wallet.cpp \
   wallet/coincontrol.cpp \
