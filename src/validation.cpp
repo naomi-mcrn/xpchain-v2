@@ -2060,10 +2060,11 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
         pos.nTxOffset += ::GetSerializeSize(tx, SER_DISK, CLIENT_VERSION);
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Unfortunately the height requirement is needed as testnet originally launched with a different reward schema in place
 
-    if (block.IsProofOfStake()) {
-
+    if (block.IsProofOfStake() && pindex->nHeight > 1500)
+    {
        const auto& tx = block.vtx[1];
        const auto& txin = tx->vin[0].prevout.hash;
 
@@ -2079,7 +2080,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
        }
 
        // calc expected reward
-       CAmount expectedReward = COIN;
+       CAmount expectedReward = 2 * COIN;
        CAmount baseReward = GetBlockSubsidy(pindex->nHeight, Params().GetConsensus(), false);
        for (unsigned int i = 0; i < 3; i++)
             expectedReward += GetMasternodePayment(i, baseReward);
