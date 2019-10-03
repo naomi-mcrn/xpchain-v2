@@ -9,7 +9,6 @@
 #include <script/interpreter.h>
 #include <consensus/validation.h>
 #include <util.h>
-#include <abpos2.h>
 
 // TODO remove the following dependencies
 #include <chain.h>

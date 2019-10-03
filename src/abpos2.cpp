@@ -6,7 +6,7 @@
 #include <validation.h>
 #include <util.h>
 
-const bool fDebug = true;
+const bool fDebug = false; 
 unsigned int launchTime = GetTime();
 std::map<uint256, int> inputFromCache;
 std::map<uint256, int>::iterator it;
@@ -69,7 +69,9 @@ int GetStakeInputAge(uint256 stakeInputHash, int nBlockTime)
     // return time in whole hours
     int stakeInputAge = nBlockTime - nInputTime;
 
-    LogPrintf("GetStakeInputAge()::Inputhash %s Age %llu\n", stakeInputHash.ToString().c_str(), stakeInputAge);
+    if (fDebug)
+       LogPrintf("GetStakeInputAge()::Inputhash %s Age %llu\n", stakeInputHash.ToString().c_str(), stakeInputAge);
+
     return stakeInputAge * 1000;
 }
 
@@ -77,6 +79,7 @@ CAmount GetProofOfStakeReward(int64_t nCoinAge)
 {
     static int64_t nRewardCoinYear = CENT;
     CAmount nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
-    LogPrintf("%s: create=%llu nCoinAge=%llu\n", __func__, nSubsidy, nCoinAge);
+    if (fDebug)
+       LogPrintf("%s: create=%llu nCoinAge=%llu\n", __func__, nSubsidy, nCoinAge);
     return nSubsidy;
 }
