@@ -585,7 +585,7 @@ void UpdateLastBlockAnnounceTime(NodeId node, int64_t time_in_seconds)
 // one-shots
 static bool IsOutboundDisconnectionCandidate(const CNode *node)
 {
-    return !(node->fInbound || node->m_manual_connection || node->fFeeler || node->fOneShot);
+    return false;
 }
 
 void PeerLogicValidation::InitializeNode(CNode *pnode) {

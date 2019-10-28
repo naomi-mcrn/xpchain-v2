@@ -15,8 +15,8 @@ class CConnman;
 class CWallet;
 
 static const int MASTERNODE_CHECK_SECONDS               =   5;
-static const int MASTERNODE_MIN_MNB_SECONDS             =   5 * 60;
-static const int MASTERNODE_MIN_MNP_SECONDS             =  10 * 60;
+static const int MASTERNODE_MIN_MNB_SECONDS             =   30;
+static const int MASTERNODE_MIN_MNP_SECONDS             =   2 * 60;
 static const int MASTERNODE_EXPIRATION_SECONDS          =  65 * 60;
 static const int MASTERNODE_WATCHDOG_MAX_SECONDS        = 120 * 60;
 static const int MASTERNODE_NEW_START_REQUIRED_SECONDS  = 180 * 60;

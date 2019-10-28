@@ -2353,6 +2353,9 @@ static bool IsCorrectType(CAmount nAmount, AvailableCoinsType nCoinType)
     } else if(nCoinType == ONLY_MASTERNODE_COLLATERAL) {
         for(int i=0; i<Params().CollateralLevels(); i++) {
             if(nAmount == (Params().ValidCollateralAmounts()[i] * COIN)) {
+		LogPrintf("IsCorrectType() - wallet/wallet.cpp\n");
+		LogPrintf("nAmount == %llu\n", nAmount);
+		LogPrintf("Collat  == %llu\n", Params().ValidCollateralAmounts()[i]);
                 found = true;
                 break;
             }

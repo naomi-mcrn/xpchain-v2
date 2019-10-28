@@ -129,6 +129,9 @@ CMasternode::CollateralStatus CMasternode::CheckCollateral(const COutPoint& outp
     bool fCollateralAmountValid = false;
     for(int i=0; i<Params().CollateralLevels(); i++) {
         if(coin.out.nValue == (Params().ValidCollateralAmounts()[i] * COIN)) {
+           LogPrintf("IsCorrectType() - masternode.cpp L132\n");
+           LogPrintf("nAmount == %llu\n", coin.out.nValue);
+           LogPrintf("Collat  == %llu\n", Params().ValidCollateralAmounts()[i]);
            fCollateralAmountValid = true;
            break;
         }
@@ -285,6 +288,10 @@ bool CMasternode::IsInputAssociatedWithPubkey() const
         for(const CTxOut &out : tx->vout) {
             for(int i=0; i<Params().CollateralLevels(); i++) {
                 if(out.nValue == (Params().ValidCollateralAmounts()[i] * COIN) && out.scriptPubKey == payee) {
+                   LogPrintf("IsInputAssociatedWithPubkey() - masternode.cpp L291\n");
+                   LogPrintf("payee   == %s\n", payee.ToString().c_str());
+                   LogPrintf("nAmount == %llu\n", out.nValue);
+                   LogPrintf("Collat  == %llu\n", Params().ValidCollateralAmounts()[i]);
                    return true;
                 }
             }
@@ -946,9 +953,16 @@ int CMasternode::RetrieveMNType()
 {
     int mnType = 0;
     CAmount nOutPointValue = CheckOutPointValue(vin.prevout);
-    for(int i=0; i<Params().CollateralLevels(); i++)
-        if((nOutPointValue * COIN) == (Params().ValidCollateralAmounts()[i] * COIN))
+    for(int i=0; i<Params().CollateralLevels(); i++) {
+        if((nOutPointValue * COIN) == (Params().ValidCollateralAmounts()[i] * COIN)) {
+           LogPrintf("RetrieveMNType() - masternode.cpp L958\n");
+           LogPrintf("nOutPointValue == %llu\n", nOutPointValue);
+           LogPrintf("Collat         == %llu\n", Params().ValidCollateralAmounts()[i]);
+           LogPrintf("mnType         == %d\n", mnType);
            return mnType;
+	}
+    }
+    LogPrintf("Exiting RetrieveMNType() via fallthrough... (! mnType %d)\n", mnType);
     return(Params().CollateralLevels());
 }
 
