@@ -131,22 +131,14 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
         masternode_info_t mnInfo;
 
         // small node
-        if(!mnodeman.GetNextMasternodeInQueueForPayment(nBlockHeight, true, nCount, mnInfo, 0))
-            payee1 = GetScriptForDestination(mnInfo.pubKeyCollateralAddress.GetID());
-        else
-            LogPrint(BCLog::MNPAYMENTS, "CreateNewBlock: Failed to detect small masternode to pay\n");
-
+        mnodeman.GetNextMasternodeInQueueForPayment(nBlockHeight, true, nCount, mnInfo, 0);
+        payee1 = GetScriptForDestination(mnInfo.pubKeyCollateralAddress.GetID());
         // medium node
-        if(!mnodeman.GetNextMasternodeInQueueForPayment(nBlockHeight, true, nCount, mnInfo, 1))
-            payee2 = GetScriptForDestination(mnInfo.pubKeyCollateralAddress.GetID());
-        else
-            LogPrint(BCLog::MNPAYMENTS, "CreateNewBlock: Failed to detect medium masternode to pay\n");
-
+        mnodeman.GetNextMasternodeInQueueForPayment(nBlockHeight, true, nCount, mnInfo, 1);
+        payee2 = GetScriptForDestination(mnInfo.pubKeyCollateralAddress.GetID());
         // large node
-        if(!mnodeman.GetNextMasternodeInQueueForPayment(nBlockHeight, true, nCount, mnInfo, 2))
-            payee3 = GetScriptForDestination(mnInfo.pubKeyCollateralAddress.GetID());
-        else
-            LogPrint(BCLog::MNPAYMENTS, "CreateNewBlock: Failed to detect large masternode to pay\n");
+        mnodeman.GetNextMasternodeInQueueForPayment(nBlockHeight, true, nCount, mnInfo, 2);
+        payee3 = GetScriptForDestination(mnInfo.pubKeyCollateralAddress.GetID());
     }
 
     CAmount masternodePaymentSmall = GetMasternodePayment(0, blockReward);
